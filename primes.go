@@ -6,47 +6,52 @@ import (
 )
 import . "gonum.org/v1/gonum/mat"
 
-func IsPrime(value int) bool {
-	for i := 2; i <= int(math.Sqrt(float64(value))); i++ {
-		if value%i == 0 {
-			return false
+func primeVector(n int) []float64 {
+
+	lim := n + 1
+
+	for lim <= (n+1)*int(math.Log(float64(lim)))  {
+		lim++
+	}
+
+	f := make([]bool, lim)
+
+	for i := 2; i <= int(math.Sqrt(float64(lim))); i++ {
+		if f[i] == false {
+			for j := i * i; j < lim; j += i {
+				f[j] = true
+			}
 		}
 	}
-	return value > 1
-}
 
-func NextPrime(x int) int {
-	if x < 2 {
-		return 2
+	p := make([]float64, n+1)
+	p[0] = 1
+	j := 1
+	i := 2
+	for  i < lim && j <= n {
+		if f[i] == false {
+			p[j] = float64(i)
+			j++
+		}
+		i++
 	}
-
-	next := x + 1
-	nextSqr := next * next
-	for next <= nextSqr && !IsPrime(next) {
-		next++
-	}
-
-	return next
+	return p
 }
 
 func MultyTable(n int) Dense {
 
-	x := n+1
+	x := n + 1
 
 	r := NewDense(x, x, nil)
 	c := NewDense(x, x, nil)
-	
-	v := make([]float64, x)
-	v[0]=1
-	for i := 1; i < x; i++ {
-		v[i] = float64(NextPrime(int(v[i-1])))
-	}
 
-	r.SetRow(0, v)
-	c.SetCol(0, v)
+	var primes = primeVector(n + 1)
+
+	r.SetRow(0, primes)
+	c.SetCol(0, primes)
 
 	var t Dense
-	t.Mul(c,r)
+	t.Mul(c, r)
 	return t
 }
 
@@ -57,9 +62,9 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
-	} else if n>=1{
+	} else if n >= 1 {
 
-		var c= MultyTable(n)
+		var c = MultyTable(n)
 
 		fc := Formatted(&c, Squeeze())
 		fmt.Printf("%v", fc)
