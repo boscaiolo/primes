@@ -35,8 +35,7 @@ func MultyTable(n int) Dense {
 	
 	v := make([]float64, x)
 	v[0]=1
-	v[1]=2
-	for i := 2; i < x; i++ {
+	for i := 1; i < x; i++ {
 		v[i] = float64(NextPrime(int(v[i-1])))
 	}
 
