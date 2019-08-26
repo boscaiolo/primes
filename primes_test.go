@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"gonum.org/v1/gonum/mat"
+	"reflect"
+	"testing"
+)
 
 func TestNextPrime1(t *testing.T) {
 	type args struct {
@@ -11,15 +15,16 @@ func TestNextPrime1(t *testing.T) {
 		args args
 		want int
 	}{
-		{name: "test -1", args: args{x:-1}, want: 2},
-		{name: "test 0", args: args{x:0}, want: 2},
-		{name: "test 1", args: args{x:1}, want: 2},
-		{name: "test 2", args: args{x:2}, want: 3},
-		{name: "test 3", args: args{x:3}, want: 5},
-		{name: "test 4", args: args{x:4}, want: 5},
-		{name: "test 5", args: args{x:5}, want: 7},
-		{name: "test 6", args: args{x:6}, want: 7},
-		{name: "test 7", args: args{x:7}, want: 11},
+		{name: "test -1", args: args{x: -1}, want: 2},
+		{name: "test 0", args: args{x: 0}, want: 2},
+		{name: "test 1", args: args{x: 1}, want: 2},
+		{name: "test 2", args: args{x: 2}, want: 3},
+		{name: "test 3", args: args{x: 3}, want: 5},
+		{name: "test 4", args: args{x: 4}, want: 5},
+		{name: "test 5", args: args{x: 5}, want: 7},
+		{name: "test 6", args: args{x: 6}, want: 7},
+		{name: "test 7", args: args{x: 7}, want: 11},
+		{name: "test 7", args: args{x: 11}, want: 13},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -48,11 +53,40 @@ func TestIsPrime(t *testing.T) {
 		{name: "test 5", args: args{5}, want: true},
 		{name: "test 6", args: args{6}, want: false},
 		{name: "test 7", args: args{7}, want: true},
+		{name: "test 7", args: args{8}, want: false},
+		{name: "test 7", args: args{11}, want: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := IsPrime(tt.args.value); got != tt.want {
 				t.Errorf("IsPrime() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMultyTable(t *testing.T) {
+	type args struct {
+		n int
+	}
+	tests := []struct {
+		name string
+		args args
+		want mat.Dense
+	}{
+		{"test n=1",args{1},*mat.NewDense(2, 2, []float64{1, 2, 2, 4})},
+		{"test n=2",args{2},*mat.NewDense(3, 3, []float64{1, 2, 3, 2, 4, 6, 3, 6, 9})},
+		{"test n=3",args{3},
+		*mat.NewDense(4, 4,
+				[]float64{1, 2, 3, 5,
+			  			  2, 4, 6, 10,
+			  			  3, 6, 9, 15,
+			  			  5, 10, 15, 25})},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := MultyTable(tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MultyTable() = %v, want %v", got, tt.want)
 			}
 		})
 	}
