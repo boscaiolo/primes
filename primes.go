@@ -1,6 +1,9 @@
 package main
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 import . "gonum.org/v1/gonum/mat"
 
 func IsPrime(value int) bool {
@@ -48,5 +51,17 @@ func MultyTable(n int) Dense {
 }
 
 func main() {
+	var n int
+	fmt.Println("Enter an integer value >=1 : ")
+	_, err := fmt.Scanf("%d", &n)
 
+	if err != nil {
+		fmt.Println(err)
+	} else if n>=1{
+
+		var c= MultyTable(n)
+
+		fc := Formatted(&c, Squeeze())
+		fmt.Printf("%v", fc)
+	}
 }
