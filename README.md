@@ -2,13 +2,13 @@
 
 A golang application to calculate the multiplication table of the first N primes
 
-##Run
+## Run
     primes.exe
     
-##Run Tests    
+## Run Tests    
     go test
     
-###Limitations
+### Limitations
     Using N*N as limit for generating primes. I have tried to use the formula:
           
           Pn / log Pn ~ N
