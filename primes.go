@@ -8,11 +8,7 @@ import . "gonum.org/v1/gonum/mat"
 
 func primeVector(n int) []float64 {
 
-	lim := n + 1
-
-	for lim <= (n+1)*int(math.Log(float64(lim)))  {
-		lim++
-	}
+	lim := n * n
 
 	f := make([]bool, lim)
 
@@ -24,16 +20,14 @@ func primeVector(n int) []float64 {
 		}
 	}
 
-	p := make([]float64, n+1)
+	p := make([]float64, n)
 	p[0] = 1
 	j := 1
-	i := 2
-	for  i < lim && j <= n {
+	for i := 2; i < lim && j < n; i++ {
 		if f[i] == false {
 			p[j] = float64(i)
 			j++
 		}
-		i++
 	}
 	return p
 }
@@ -45,7 +39,7 @@ func MultyTable(n int) Dense {
 	r := NewDense(x, x, nil)
 	c := NewDense(x, x, nil)
 
-	var primes = primeVector(n + 1)
+	var primes = primeVector(x)
 
 	r.SetRow(0, primes)
 	c.SetCol(0, primes)
